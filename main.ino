@@ -54,7 +54,7 @@ void handleMessages(int messageCount) {
       output += "Type /help to see available commands\n";
     } else if (text == "/subscribe") {
       alertOn = HIGH;
-      lastTimeBotAlerted = millis(); // Reset alert timer
+      lastTimeBotAlert = millis(); // Reset alert timer
       output = "You have subscribed to measurement updates";
     } else if (text == "/unsubscribe") {
       alertOn = LOW;
@@ -69,7 +69,8 @@ void handleMessages(int messageCount) {
       output = "The LED is turned OFF";
     } else if (text == "/state") {
       output = digitalRead(LED_PIN) ? "LED is ON" : "LED is OFF";
-      output += "\nYou are currently " + (alertOn ? "subscribed" : "unsubscribed");
+      output += "\nYou are currently ";
+      output += alertOn ? "subscribed" : "unsubscribed";
     } else if (text == "/help") {
       output = "Welcome, " + from + ".\n";
       output += "I'm Evergreen bot\n";
@@ -94,7 +95,7 @@ void writeAlert() {
   message += "\nYou are receiving this message because you have subscribed to this topic.\n";
   message += "To unsubscribe type /unsubscribe\nTo see all available commands type /help";
   Serial.printf("Writing alert: %s\n", message.c_str());
-  bot.sendMessage(chat_id, message, "");
+  bot.sendMessage(CHAT_ID, message, "");
 }
 
 void readMessagesPolling() {
