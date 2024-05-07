@@ -36,49 +36,60 @@ void handleMessages(int messageCount) {
   for (int i = 0; i < messageCount; ++i) {
     String chat_id = String(bot.messages[i].chat_id);
     if (chat_id != CHAT_ID) {
+      Serial.printf("Unauthorized user: %s\n", chat_id.c_str());
       bot.sendMessage(chat_id, "Unauthorized user", "");
       continue;
     }
 
+    String from = bot.messages[i].from_name;
     String text = bot.messages[i].text;
-    Serial.println(text);
+    Serial.printf("Command: %s from: %s\n", text.c_str(), from.c_str());
 
-    String from_name = bot.messages[i].from_name;
+    String output = "";
 
     if (text == "/subscribe") {
       alertOn = HIGH;
       lastTimeBotAlerted = millis(); // Reset alert timer
-      bot.sendMessage(chat_id, "You have subscribed to measurement updates", "");
+      output = "You have subscribed to measurement updates";
     } else if (text == "/unsubscribe") {
       alertOn = LOW;
-      bot.sendMessage(chat_id, "You have unsubscribed to measurement updates", "");
+      output = "You have unsubscribed to measurement updates";
     } else if (text == "/led_on") {
       ledState = HIGH;
       digitalWrite(LED_PIN, ledState);
-      bot.sendMessage(chat_id, "The LED is turned ON", "");
+      output = "The LED is turned ON";
     } else if (text == "/led_off") {
       ledState = LOW;
       digitalWrite(LED_PIN, ledState);
-      bot.sendMessage(chat_id, "The LED is turned OFF", "");
+      output = "The LED is turned OFF";
     } else if (text == "/state") {
-      String message = digitalRead(LED_PIN) ? "LED is ON" : "LED is OFF";
-      message += "\nYou are currently " + (alertOn ? "subscribed" : "unsubscribed");
-      bot.sendMessage(chat_id, message, "");
+      output = digitalRead(LED_PIN) ? "LED is ON" : "LED is OFF";
+      output += "\nYou are currently " + (alertOn ? "subscribed" : "unsubscribed");
     } else if (text == "/help") {
-      String welcome = "Welcome, " + from_name + ".\n";
-      welcome += "I'm Evergreen bot\n";
-      welcome += "Use the following commands to control the LED.\n\n";
-      welcome += "/subscribe to start receiving measurement updates\n";
-      welcome += "/unsubscribe to stop receiving measurement updates\n";
-      welcome += "/led_on to turn ON LED\n";
-      welcome += "/led_off to turn OFF LED\n";
-      welcome += "/state to request current LED state\n";
-      welcome += "/help to see available commands\n";
-      bot.sendMessage(chat_id, welcome, "");
+      output = "Welcome, " + from + ".\n";
+      output += "I'm Evergreen bot\n";
+      output += "Use the following commands to control the LED.\n\n";
+      output += "/subscribe to start receiving measurement updates\n";
+      output += "/unsubscribe to stop receiving measurement updates\n";
+      output += "/led_on to turn ON LED\n";
+      output += "/led_off to turn OFF LED\n";
+      output += "/state to request current LED state\n";
+      output += "/help to see available commands";
     } else {
-      bot.sendMessage(chat_id, "Unknown command. Please write /help to see available commands", "");
+      output = "Unknown command. Please write /help to see available commands";
     }
+
+    Serial.printf("Sending to user: %s\n", output.c_str());
+    bot.sendMessage(chat_id, output, "");
   }
+}
+
+void writeAlert() {
+  String message = digitalRead(LED_PIN) ? "LED is ON" : "LED is OFF";
+  message += "\nYou are receiving this message because you have subscribed to this topic.\n";
+  message += "To unsubscribe write /unsubscribe\nTo see all available commands write /help";
+  Serial.printf("Writing alert: %s\n", message.c_str());
+  bot.sendMessage(chat_id, message, "");
 }
 
 void readMessagesPolling() {
@@ -90,42 +101,38 @@ void readMessagesPolling() {
   bot.longPoll = 0;
 
   while (newMessageCount) {
-    Serial.println("Response Received!");
+    Serial.println("Received message");
     handleMessages(newMessageCount);
     int newMessageCount = bot.getUpdates(bot.last_message_received + 1);
   }
-}
-
-void writeAlert() {
-  String message = digitalRead(LED_PIN) ? "LED is ON" : "LED is OFF";
-  message += "\nYou are receiving this message because you have subscribed to this topic.\n";
-  message += "To unsubscribe write /unsubscribe\nTo see all available commands write /help";
-  bot.sendMessage(chat_id, message, "");
 }
 
 void setupTelegram() {
   // Setup Telegram certificate
   client.setCACert(TELEGRAM_CERTIFICATE_ROOT);
 
-  const String commands = F("["
+  bot.setMyCommands(F("["
     "{\"command\":\"subscribe\",   \"description\":\"Start receiving measurement updates\"},"
     "{\"command\":\"unsubscribe\", \"description\":\"Stop receiving measurement updates\"},"
     "{\"command\":\"led_on\",      \"description\":\"Turn ON LED\"},"
     "{\"command\":\"led_off\",     \"description\":\"Turn OFF LED\"},"
     "{\"command\":\"state\",       \"description\":\"Request current LED state\"},"
-    "{\"command\":\"help\",        \"description\":\"See available commands\"}]");
-  bot.setMyCommands(commands);
+    "{\"command\":\"help\",        \"description\":\"See available commands\"}]"));
 }
 
 void setupWifi() {
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
   Serial.print("Connecting to ");
   Serial.println(ssid);
-  delay(1000);
-  while (WiFi.waitForConnectResult() != WL_CONNECTED) {
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
     Serial.print(".");
+    delay(1000);
   }
+  Serial.println();
+
+  Serial.println("WiFi connected");
   Serial.print("Connected to ");
   Serial.println(ssid);
   Serial.print("Your Local IP address is: ");
@@ -134,6 +141,9 @@ void setupWifi() {
 
 void setup() {
   Serial.begin(115200);
+  delay(1000);
+  Serial.println();
+
   // Setup LED
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, ledState);
