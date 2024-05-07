@@ -15,6 +15,8 @@ const char* password = "ADD_YOUR_PASS";
 WiFiClientSecure client;
 UniversalTelegramBot bot(BOT_TOKEN, client);
 
+// 10 seconds
+#define BOT_READ_MESSAGES_POLLING_DURATION 10
 // 1 second
 #define BOT_READ_MESSAGES_DELAY 1000
 unsigned long lastTimeBotReadMessages = 0;
@@ -79,13 +81,19 @@ void handleMessages(int messageCount) {
   }
 }
 
-void readMessages() {
-  int newMessageCount;
-  do {
-    newMessageCount = bot.getUpdates(bot.last_message_received + 1);
+void readMessagesPolling() {
+  // Long poll on first read
+  bot.longPoll = BOT_READ_MESSAGES_POLLING_DURATION;
+  int newMessageCount = bot.getUpdates(bot.last_message_received + 1);
+
+  // Don't long poll consequent reads
+  bot.longPoll = 0;
+
+  while (newMessageCount) {
     Serial.println("Response Received!");
     handleMessages(newMessageCount);
-  } while (newMessageCount);
+    int newMessageCount = bot.getUpdates(bot.last_message_received + 1);
+  }
 }
 
 void writeAlert() {
@@ -136,7 +144,7 @@ void setup() {
 
 void loop() {
   if (millis() > lastTimeBotReadMessages + BOT_READ_MESSAGES_DELAY) {
-    readMessages();
+    readMessagesPolling();
     lastTimeBotReadMessages = millis();
   }
 
