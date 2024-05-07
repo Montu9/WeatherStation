@@ -47,7 +47,12 @@ void handleMessages(int messageCount) {
 
     String output = "";
 
-    if (text == "/subscribe") {
+    if (text == "/start") {
+      output = "Welcome, " + from + ".\n";
+      output += "I'm Evergreen bot\n";
+      output += "What would you like to know?\n";
+      output += "Type /help to see available commands\n";
+    } else if (text == "/subscribe") {
       alertOn = HIGH;
       lastTimeBotAlerted = millis(); // Reset alert timer
       output = "You have subscribed to measurement updates";
@@ -76,7 +81,7 @@ void handleMessages(int messageCount) {
       output += "/state to request current LED state\n";
       output += "/help to see available commands";
     } else {
-      output = "Unknown command. Please write /help to see available commands";
+      output = "Unknown command. Please type /help to see available commands";
     }
 
     Serial.printf("Sending to user: %s\n", output.c_str());
@@ -87,7 +92,7 @@ void handleMessages(int messageCount) {
 void writeAlert() {
   String message = digitalRead(LED_PIN) ? "LED is ON" : "LED is OFF";
   message += "\nYou are receiving this message because you have subscribed to this topic.\n";
-  message += "To unsubscribe write /unsubscribe\nTo see all available commands write /help";
+  message += "To unsubscribe type /unsubscribe\nTo see all available commands type /help";
   Serial.printf("Writing alert: %s\n", message.c_str());
   bot.sendMessage(chat_id, message, "");
 }
