@@ -15,6 +15,7 @@ const char* password = "ADD_YOUR_PASS";
 WiFiClientSecure client;
 UniversalTelegramBot bot(BOT_TOKEN, client);
 
+// 1 second
 #define BOT_REQUEST_DELAY = 1000;
 unsigned long lastTimeBotRequest = 0;
 
@@ -69,8 +70,8 @@ void newMessagesHandle(int newMessages) {
       welcome += "/unsubscribe to stop receiving measurement updates\n";
       welcome += "/led_on to turn ON LED\n";
       welcome += "/led_off to turn OFF LED\n";
-      welcome += "/state to request current LED state \n";
-      welcome += "/help to see available commands \n";
+      welcome += "/state to request current LED state\n";
+      welcome += "/help to see available commands\n";
       bot.sendMessage(chat_id, welcome, "");
     } else {
       bot.sendMessage(chat_id, "Unknown command. Please write /help to see available commands", "");
@@ -94,13 +95,21 @@ void writeAlert() {
   bot.sendMessage(chat_id, message, "");
 }
 
-void setup() {
-  Serial.begin(115200);
-  // Setup LED
-  pinMode(LED_PIN, OUTPUT);
-  digitalWrite(LED_PIN, ledState);
+void setupTelegram() {
+  // Setup Telegram certificate
+  client.setCACert(TELEGRAM_CERTIFICATE_ROOT);
 
-  // Setup WIFI
+  const String commands = F("["
+    "{\"command\":\"subscribe\",   \"description\":\"Start receiving measurement updates\"},"
+    "{\"command\":\"unsubscribe\", \"description\":\"Stop receiving measurement updates\"},"
+    "{\"command\":\"led_on\",      \"description\":\"Turn ON LED\"},"
+    "{\"command\":\"led_off\",     \"description\":\"Turn OFF LED\"},"
+    "{\"command\":\"state\",       \"description\":\"Request current LED state\"},"
+    "{\"command\":\"help\",        \"description\":\"See available commands\"}]");
+  bot.setMyCommands(commands);
+}
+
+void setupWifi() {
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   Serial.print("Connecting to ");
@@ -113,8 +122,16 @@ void setup() {
   Serial.println(ssid);
   Serial.print("Your Local IP address is: ");
   Serial.println(WiFi.localIP());
-  // Setup Telegram certificate
-  client.setCACert(TELEGRAM_CERTIFICATE_ROOT);
+}
+
+void setup() {
+  Serial.begin(115200);
+  // Setup LED
+  pinMode(LED_PIN, OUTPUT);
+  digitalWrite(LED_PIN, ledState);
+
+  setupWifi();
+  setupTelegram();
 }
 
 void loop() {
