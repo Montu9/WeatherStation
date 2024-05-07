@@ -16,22 +16,22 @@ WiFiClientSecure client;
 UniversalTelegramBot bot(BOT_TOKEN, client);
 
 // 1 second
-#define BOT_REQUEST_DELAY = 1000;
-unsigned long lastTimeBotRequest = 0;
+#define BOT_READ_MESSAGES_DELAY 1000
+unsigned long lastTimeBotReadMessages = 0;
 
 // 1 minute
-#define BOT_ALERT_DELAY = 1000 * 60 * 1
-unsigned long lastTimeBotAlerted = 0;
+#define BOT_ALERT_DELAY (1000 * 60 * 1)
+unsigned long lastTimeBotAlert = 0;
 bool alertOn = LOW;
 
 #define LED_PIN 2
 bool ledState = LOW;
 
-void newMessagesHandle(int newMessages) {
-  Serial.println("newMessagesHandle");
-  Serial.println(String(newMessages));
+void handleMessages(int messageCount) {
+  Serial.println("handleMessages");
+  Serial.println(String(messageCount));
 
-  for (int i = 0; i < newMessages; i++) {
+  for (int i = 0; i < messageCount; ++i) {
     String chat_id = String(bot.messages[i].chat_id);
     if (chat_id != CHAT_ID) {
       bot.sendMessage(chat_id, "Unauthorized user", "");
@@ -80,12 +80,12 @@ void newMessagesHandle(int newMessages) {
 }
 
 void readMessages() {
-  int newMessages;
+  int newMessageCount;
   do {
-    newMessages = bot.getUpdates(bot.last_message_received + 1);
+    newMessageCount = bot.getUpdates(bot.last_message_received + 1);
     Serial.println("Response Received!");
-    newMessagesHandle(newMessages);
-  } while (newMessages);
+    handleMessages(newMessageCount);
+  } while (newMessageCount);
 }
 
 void writeAlert() {
@@ -135,13 +135,13 @@ void setup() {
 }
 
 void loop() {
-  if (millis() > lastTimeBotRequest + BOT_REQUEST_DELAY) {
+  if (millis() > lastTimeBotReadMessages + BOT_READ_MESSAGES_DELAY) {
     readMessages();
-    lastTimeBotRequest = millis();
+    lastTimeBotReadMessages = millis();
   }
 
-  if (alertOn && millis() > lastTimeBotAlerted + BOT_ALERT_DELAY) {
+  if (alertOn && millis() > lastTimeBotAlert + BOT_ALERT_DELAY) {
     writeAlert();
-    lastTimeBotAlerted = millis();
+    lastTimeBotAlert = millis();
   }
 }
