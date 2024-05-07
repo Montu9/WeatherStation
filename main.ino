@@ -75,6 +75,7 @@ void handleMessages(int messageCount) {
       output = "Welcome, " + from + ".\n";
       output += "I'm Evergreen bot\n";
       output += "Use the following commands to control the LED.\n\n";
+      output += "/start to learn more about bot\n";
       output += "/subscribe to start receiving measurement updates\n";
       output += "/unsubscribe to stop receiving measurement updates\n";
       output += "/led_on to turn ON LED\n";
@@ -118,6 +119,7 @@ void setupTelegram() {
   client.setCACert(TELEGRAM_CERTIFICATE_ROOT);
 
   bot.setMyCommands(F("["
+    "{\"command\":\"start\",       \"description\":\"Learn more about bot\"},"
     "{\"command\":\"subscribe\",   \"description\":\"Start receiving measurement updates\"},"
     "{\"command\":\"unsubscribe\", \"description\":\"Stop receiving measurement updates\"},"
     "{\"command\":\"led_on\",      \"description\":\"Turn ON LED\"},"
