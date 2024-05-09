@@ -35,7 +35,7 @@ float SensorsReader::readSoilMoisture() const {
 }
 
 String SensorsReader::toString(SensorsData sensorsData) const {
-  output = String("Temperature: ");
+  String output = String("Temperature: ");
   output += String(sensorsData.bmpData.temperature, 2);
   output += "℃\nPressure: ";
   output += String(sensorsData.bmpData.pressure, 2);
