@@ -81,7 +81,7 @@ void loop() {
 
     if (bot->alertOn || soilMoistureIsNotOk) {
       bot->writeAlert(data);
-      bot->lastTimeBotAlert = millis();
     }
+    bot->lastTimeBotAlert = millis();
   }
 }
