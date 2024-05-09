@@ -1,19 +1,20 @@
-// https://www.electronicwings.com/esp32/control-the-led-using-telegram-message-and-esp32
-// https://www.electronicwings.com/esp32/temperature-alert-on-telegram-using-esp32
-
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
 #include <UniversalTelegramBot.h>
 #include <ArduinoJson.h>
-
-const char* ssid = "ADD_YOUR_SSID";
-const char* password = "ADD_YOUR_PASS";
-
-#define BOT_TOKEN "ADD_YOUR_TOKEN"
-#define CHAT_ID "ADD_YOUR_CHAT_ID"
+#include "secrets.h"
+#include "aht.h"
+#include "bmp.h"
+#include "ldr.h"
+#include "soil.h"
 
 WiFiClientSecure client;
 UniversalTelegramBot bot(BOT_TOKEN, client);
+
+AHT_sensor* aht;
+BMP_sensor* bmp;
+LDR_sensor* ldr;
+SOIL_sensor* soil;
 
 // 10 seconds
 #define BOT_READ_MESSAGES_POLLING_DURATION 10
@@ -28,6 +29,7 @@ bool alertOn = LOW;
 
 #define LED_PIN 2
 bool ledState = LOW;
+
 
 void handleMessages(int messageCount) {
   Serial.println("handleMessages");
@@ -130,9 +132,9 @@ void setupTelegram() {
 
 void setupWifi() {
   Serial.print("Connecting to ");
-  Serial.println(ssid);
+  Serial.println(WIFI_SSID);
   WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
 
   while (WiFi.status() != WL_CONNECTED) {
     Serial.print(".");
@@ -142,7 +144,7 @@ void setupWifi() {
 
   Serial.println("WiFi connected");
   Serial.print("Connected to ");
-  Serial.println(ssid);
+  Serial.println(WIFI_SSID);
   Serial.print("Your Local IP address is: ");
   Serial.println(WiFi.localIP());
 }
@@ -152,9 +154,11 @@ void setup() {
   delay(1000);
   Serial.println();
 
-  // Setup LED
-  pinMode(LED_PIN, OUTPUT);
-  digitalWrite(LED_PIN, ledState);
+  // Setup sensors
+  aht = new AHT_sensor();
+  bmp = new BMP_sensor();
+  ldr = new LDR_sensor(39);
+  soil = new SOIL_sensor(36);
 
   setupWifi();
   setupTelegram();
