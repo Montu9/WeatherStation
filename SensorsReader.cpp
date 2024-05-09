@@ -35,23 +35,21 @@ float SensorsReader::readSoilMoisture() const {
 }
 
 String SensorsReader::toString(SensorsData sensorsData) const {
-  String output("AHT: temperature: ");
-  output += String(sensorsData.ahtData.temperature, 2);
-  output += " humidity: ";
-  output += String(sensorsData.ahtData.humidity, 2);
-  output += "\n";
-
-  output += "BMP: temperature: ";
+  output = String("Temperature: ");
   output += String(sensorsData.bmpData.temperature, 2);
-  output += " pressure: ";
+  output += "℃\nPressure: ";
   output += String(sensorsData.bmpData.pressure, 2);
-  output += "\n";
+  output += "hPa\n";
 
-  output += "Light value: ";
+  output += "Humidity: ";
+  output += String(sensorsData.ahtData.humidity, 2);
+  output += "%\n";
+
+  output += "Brightness: ";
   output += String(sensorsData.ldrLight, 2);
   output += "%\n";
 
-  output += "Soil moist value: ";
+  output += "Soil moisture: ";
   output += String(sensorsData.soilMoist, 2);
   output += "%";
 
