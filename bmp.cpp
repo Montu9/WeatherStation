@@ -24,7 +24,7 @@ BMPData BMP_sensor::readBMPData() {
   Serial.print(bmpPressure);
   Serial.println(F(" +-0.12hPa"));
 
-  BMPValues.temperature = bmpPressure;
+  BMPValues.temperature = bmpTemp;
   BMPValues.pressure = bmpPressure;
   return BMPValues;
 }
