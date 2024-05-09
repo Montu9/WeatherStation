@@ -2,7 +2,7 @@
 
 Bot::Bot(const String& token, WiFiClientSecure& client, String chatId,
          SensorsReader* sensorsReader)
-    : bot(token, client), chatId(chatId) {
+    : bot(token, client), chatId(chatId), sensorsReader(sensorsReader) {
   // Setup Telegram certificate
   client.setCACert(TELEGRAM_CERTIFICATE_ROOT);
 
