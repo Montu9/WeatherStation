@@ -100,8 +100,13 @@ void Bot::handleMessages(int messageCount) {
       output += "%";
     } else if (text == "/moisture") {
       float moisture = sensorsReader->readSoilMoisture();
+      const auto moistureRating =
+          sensorsReader->calculateSoilMoistureRating(moisture);
+      const auto moistureRatingStr = sensorsReader->ratingToString(moistureRating);
       output = String(moisture, 2);
-      output += "%";
+      output += "% (";
+      output += moistureRatingStr;
+      output += ")";
     } else if (text == "/help") {
       output = "Welcome, " + from + ".\n";
       output += "I'm Evergreen bot\n";

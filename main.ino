@@ -76,8 +76,9 @@ void loop() {
 
   if (millis() > bot->lastTimeBotAlert + BOT_ALERT_DELAY) {
     const auto data = sensorsReader->readData();
-    const bool soilMoistureIsNotOk =
-        data.soilMoistureRating != SensorsData::Rating::Ok;
+    const auto moistureRating =
+        sensorsReader->calculateSoilMoistureRating(data.soilMoisture);
+    const bool soilMoistureIsNotOk = moistureRating != SensorsReader::Rating::Ok;
 
     if (bot->alertOn || soilMoistureIsNotOk) {
       bot->writeAlert(data);
