@@ -7,6 +7,7 @@
 #include <UniversalTelegramBot.h>
 #include <ArduinoJson.h>
 #include "SensorsReader.h"
+#include "SensorsData.h"
 
 class Bot {
 public:
@@ -15,7 +16,7 @@ public:
 
   void readMessages();
 
-  void writeAlert();
+  void writeAlert(SensorsData sensorsData);
 
   void setLongPoll(int longPoll);
 

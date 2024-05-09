@@ -6,13 +6,7 @@
 #include "bmp.h"
 #include "ldr.h"
 #include "soil.h"
-
-struct SensorsData {
-  AHTData ahtData;
-  BMPData bmpData;
-  float ldrLight;
-  float soilMoist;
-};
+#include "SensorsData.h"
 
 class SensorsReader {
 public:
@@ -34,6 +28,8 @@ private:
   BMP_sensor* bmpSensor;
   LDR_sensor* ldrSensor;
   SOIL_sensor* soilSensor;
+
+  const char* rankingToString(SensorsData::Rating rating) const;
 };
 
 #endif // SENSORSREADER_H

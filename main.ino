@@ -74,8 +74,14 @@ void loop() {
     lastTimeBotReadMessages = millis();
   }
 
-  if (bot->alertOn && millis() > bot->lastTimeBotAlert + BOT_ALERT_DELAY) {
-    bot->writeAlert();
-    bot->lastTimeBotAlert = millis();
+  if (millis() > bot->lastTimeBotAlert + BOT_ALERT_DELAY) {
+    const auto data = sensorsReader->readData();
+    const bool soilMoistureIsNotOk =
+        data.soilMoistureRating != SensorsData::Rating::Ok;
+
+    if (bot->alertOn || soilMoistureIsNotOk) {
+      bot->writeAlert(data);
+      bot->lastTimeBotAlert = millis();
+    }
   }
 }

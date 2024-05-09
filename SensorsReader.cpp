@@ -6,12 +6,9 @@ SensorsReader::SensorsReader(AHT_sensor* ahtSensor, BMP_sensor* bmpSensor,
       ldrSensor(ldrSensor), soilSensor(soilSensor) {}
 
 SensorsData SensorsReader::readData() const {
-  return {
-      .ahtData = ahtSensor->readAHTData(),
-      .bmpData = bmpSensor->readBMPData(),
-      .ldrLight = ldrSensor->readLDRLight(),
-      .soilMoist = soilSensor->readSOILMoist()
-  };
+  return SensorsData(bmpSensor->readBMPTemp(), ahtSensor->readAHTHumidity(),
+                     bmpSensor->readBMPPressure(), ldrSensor->readLDRLight(),
+                     soilSensor->readSOILMoist());
 }
 
 float SensorsReader::readTemperature() const {
@@ -36,22 +33,40 @@ float SensorsReader::readSoilMoisture() const {
 
 String SensorsReader::toString(SensorsData sensorsData) const {
   String output = String("Temperature: ");
-  output += String(sensorsData.bmpData.temperature, 2);
+  output += String(sensorsData.temperature, 2);
   output += "℃\nPressure: ";
-  output += String(sensorsData.bmpData.pressure, 2);
+  output += String(sensorsData.pressure, 2);
   output += "hPa\n";
 
   output += "Humidity: ";
-  output += String(sensorsData.ahtData.humidity, 2);
+  output += String(sensorsData.humidity, 2);
   output += "%\n";
 
   output += "Brightness: ";
-  output += String(sensorsData.ldrLight, 2);
+  output += String(sensorsData.brightness, 2);
   output += "%\n";
 
   output += "Soil moisture: ";
-  output += String(sensorsData.soilMoist, 2);
-  output += "%";
+  output += String(sensorsData.soilMoisture, 2);
+  output += "% (";
+  output += rankingToString(sensorsData.soilMoistureRating);
+  output += ")";
 
   return output;
+}
+
+const char* SensorsReader::rankingToString(SensorsData::Rating rating) const {
+  switch (rating) {
+  case SensorsData::Rating::VeryLow:
+    return "Very Low";
+  case SensorsData::Rating::Low:
+    return "Low";
+  case SensorsData::Rating::Ok:
+    return "Ok";
+  case SensorsData::Rating::High:
+    return "High";
+  case SensorsData::Rating::VeryHigh:
+  default:
+    return "Very High";
+  }
 }
