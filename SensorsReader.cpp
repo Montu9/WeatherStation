@@ -32,7 +32,16 @@ float SensorsReader::readSoilMoisture() const {
 }
 
 String SensorsReader::toString(SensorsData sensorsData) const {
-  String output = String("Temperature: ");
+  String output("");
+
+  const auto soilMoistureRatingStr = rankingToString(sensorsData.soilMoistureRating);
+  if (sensorsData.soilMoistureRating != SensorsData::Rating::Ok) {
+    output += "Warning, current soil moisture is ";
+    output += soilMoistureRatingStr;
+    output += "\n";
+  }
+
+  output += String("Temperature: ");
   output += String(sensorsData.temperature, 2);
   output += "℃\nPressure: ";
   output += String(sensorsData.pressure, 2);
@@ -49,7 +58,7 @@ String SensorsReader::toString(SensorsData sensorsData) const {
   output += "Soil moisture: ";
   output += String(sensorsData.soilMoisture, 2);
   output += "% (";
-  output += rankingToString(sensorsData.soilMoistureRating);
+  output += soilMoistureRatingStr;
   output += ")";
 
   return output;
