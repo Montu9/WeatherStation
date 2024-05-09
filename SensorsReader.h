@@ -17,9 +17,15 @@ struct SensorsData {
 class SensorsReader {
 public:
   SensorsReader(AHT_sensor* ahtSensor, BMP_sensor* bmpSensor,
-               LDR_sensor* ldrSensor, SOIL_sensor* soilSensor);
+                LDR_sensor* ldrSensor, SOIL_sensor* soilSensor);
 
   SensorsData readData() const;
+
+  float readTemperature() const;
+  float readHumidity() const;
+  float readPressure() const;
+  float readBrightness() const;
+  float readSoilMoisture() const;
 
   String toString(SensorsData sensorsData) const;
 

@@ -11,6 +11,11 @@ Bot::Bot(const String& token, WiFiClientSecure& client, String chatId,
     "{\"command\":\"subscribe\",   \"description\":\"Start receiving measurement updates\"},"
     "{\"command\":\"unsubscribe\", \"description\":\"Stop receiving measurement updates\"},"
     "{\"command\":\"state\",       \"description\":\"Request current sensor measurements\"},"
+    "{\"command\":\"temperature\", \"description\":\"Request current temperature\"},"
+    "{\"command\":\"humidity\",    \"description\":\"Request current humidity\"},"
+    "{\"command\":\"pressure\",    \"description\":\"Request current pressure\"},"
+    "{\"command\":\"brightness\",  \"description\":\"Request current brightness\"},"
+    "{\"command\":\"moisture\",    \"description\":\"Request current soil moisture\"},"
     "{\"command\":\"help\",        \"description\":\"See available commands\"}]"));
 }
 
@@ -48,8 +53,7 @@ void Bot::setLongPoll(int longPoll) {
 }
 
 void Bot::handleMessages(int messageCount) {
-  Serial.println("Bot :: handleMessages");
-  Serial.println(String(messageCount));
+  Serial.printf("Bot :: handleMessages %d\n", messageCount);
 
   for (int i = 0; i < messageCount; ++i) {
     String currentChatId = String(bot.messages[i].chat_id);
@@ -81,6 +85,23 @@ void Bot::handleMessages(int messageCount) {
       output = sensorsReader->toString(sensorsReader->readData());
       output += "\nYou are currently ";
       output += alertOn ? "subscribed" : "unsubscribed";
+    } else if (text == "/temperature") {
+      float temp = sensorsReader->readTemperature();
+      output = String(temp, 2);
+    } else if (text == "/humidity") {
+      float humidity = sensorsReader->readHumidity();
+      output = String(humidity, 2);
+    } else if (text == "/pressure") {
+      float pressure = sensorsReader->readPressure();
+      output = String(pressure, 2);
+    } else if (text == "/brightness") {
+      float brightness = sensorsReader->readBrightness();
+      output = String(brightness, 2);
+      output += "%";
+    } else if (text == "/moisture") {
+      float moisture = sensorsReader->readSoilMoisture();
+      output = String(moisture, 2);
+      output += "%";
     } else if (text == "/help") {
       output = "Welcome, " + from + ".\n";
       output += "I'm Evergreen bot\n";
@@ -89,6 +110,11 @@ void Bot::handleMessages(int messageCount) {
       output += "/subscribe to start receiving measurement updates\n";
       output += "/unsubscribe to stop receiving measurement updates\n";
       output += "/state to request current sensor measurements\n";
+      output += "/temperature to request current temperature\n";
+      output += "/humidity to request current humidity\n";
+      output += "/pressure to request current pressure\n";
+      output += "/brightness to request current brightness\n";
+      output += "/moisture to request current soil moisture\n";
       output += "/help to see available commands";
     } else {
       output = "Unknown command. Please type /help to see available commands";

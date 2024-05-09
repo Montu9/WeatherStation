@@ -14,6 +14,26 @@ SensorsData SensorsReader::readData() const {
   };
 }
 
+float SensorsReader::readTemperature() const {
+  return bmpSensor->readBMPTemp();
+}
+
+float SensorsReader::readHumidity() const {
+  return ahtSensor->readAHTHumidity();
+}
+
+float SensorsReader::readPressure() const {
+  return bmpSensor->readBMPPressure();
+}
+
+float SensorsReader::readBrightness() const {
+  return ldrSensor->readLDRLight();
+}
+
+float SensorsReader::readSoilMoisture() const {
+  return soilSensor->readSOILMoist();
+}
+
 String SensorsReader::toString(SensorsData sensorsData) const {
   String output("AHT: temperature: ");
   output += String(sensorsData.ahtData.temperature, 2);
