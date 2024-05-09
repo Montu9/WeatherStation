@@ -24,7 +24,7 @@ void Bot::readMessages() {
   while (newMessageCount) {
     Serial.println("Bot :: Received message");
     handleMessages(newMessageCount);
-    int newMessageCount = bot.getUpdates(bot.last_message_received + 1);
+    newMessageCount = bot.getUpdates(bot.last_message_received + 1);
   }
 
   // Revert to original long poll
