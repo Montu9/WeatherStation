@@ -10,8 +10,8 @@
 struct SensorsData {
   AHTData ahtData;
   BMPData bmpData;
-  int ldrLight;
-  int soilMoist;
+  float ldrLight;
+  float soilMoist;
 };
 
 class SensorsReader {

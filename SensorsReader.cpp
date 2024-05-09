@@ -28,11 +28,12 @@ String SensorsReader::toString(SensorsData sensorsData) const {
   output += "\n";
 
   output += "Light value: ";
-  output += String(sensorsData.ldrLight);
-  output += "\n";
+  output += String(sensorsData.ldrLight, 2);
+  output += "%\n";
 
   output += "Soil moist value: ";
-  output += String(sensorsData.soilMoist);
+  output += String(sensorsData.soilMoist, 2);
+  output += "%";
 
   return output;
 }

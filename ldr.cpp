@@ -6,9 +6,10 @@ LDR_sensor::LDR_sensor(int pin_num) {
   Serial.println("LDR sensor correctly initialized!");
 }
 
-int LDR_sensor::readLDRLight() {
+float LDR_sensor::readLDRLight() {
   int value = analogRead(ldr_pin);
-  Serial.print("Light value: ");
-  Serial.println(value);
-  return value;
+  float lightPerc = 1 - ((float)value / 4905.f);
+  // escape % -> %%
+  Serial.printf("Light value: %d = %.2f%%\n", value, lightPerc);
+  return lightPerc;
 }
