@@ -1,5 +1,6 @@
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
+#include "ThingSpeak.h"
 #include "secrets.h"
 #include "aht.h"
 #include "bmp.h"
@@ -7,6 +8,7 @@
 #include "soil.h"
 #include "SensorsReader.h"
 #include "bot.h"
+#include "storage.h"
 
 // secrets header needs to define these:
 // const char* WIFI_SSID = "ADD_YOUR_SSID";
@@ -15,6 +17,7 @@
 // #define CHAT_ID "ADD_YOUR_CHAT_ID"
 
 WiFiClientSecure client;
+WiFiClient tsClient;
 Bot* bot;
 
 AHT_sensor* aht;
@@ -22,6 +25,7 @@ BMP_sensor* bmp;
 LDR_sensor* ldr;
 SOIL_sensor* soil;
 SensorsReader* sensorsReader;
+Storage* storage;
 
 // 10 seconds
 #define BOT_READ_MESSAGES_POLLING_DURATION 10
@@ -64,8 +68,11 @@ void setup() {
   sensorsReader = new SensorsReader(aht, bmp, ldr, soil);
 
   setupWifi();
+
   bot = new Bot(BOT_TOKEN, client, CHAT_ID, sensorsReader);
   bot->setLongPoll(BOT_READ_MESSAGES_POLLING_DURATION);
+
+  storage = new Storage(tsClient);
 }
 
 void loop() {
@@ -84,5 +91,8 @@ void loop() {
       bot->writeAlert(data);
     }
     bot->lastTimeBotAlert = millis();
+
+    storage->setSensorsData(data);
+    storage->saveData();
   }
 }
