@@ -10,11 +10,16 @@
 #include "bot.h"
 #include "storage.h"
 
-// secrets header needs to define these:
-// const char* WIFI_SSID = "ADD_YOUR_SSID";
-// const char* WIFI_PASS = "ADD_YOUR_PASS";
+// secrets header must define these:
+// WI-FI
+// #define WIFI_SSID "ADD_YOUR_SSID"
+// #define WIFI_PASS "ADD_YOUR_PASS"
+// Telegram
 // #define BOT_TOKEN "ADD_YOUR_TOKEN"
 // #define CHAT_ID "ADD_YOUR_CHAT_ID"
+// ThingSpeak
+// #define TS_CHANNEL_NUM (Add your channel e.g. 123UL)
+// #define TS_WRITE_API_KEY "ADD_YOUR_API_KEY"
 
 WiFiClientSecure client;
 WiFiClient tsClient;

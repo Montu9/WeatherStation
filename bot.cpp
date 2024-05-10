@@ -37,10 +37,6 @@ void Bot::readMessages() {
 }
 
 void Bot::writeAlert(SensorsData sensorsData) {
-  if (!alertOn) {
-    return;
-  }
-
   String message = sensorsReader->toString(sensorsData);
   message += "\nYou are receiving this message because you have subscribed to this topic.\n";
   message += "To unsubscribe type /unsubscribe\nTo see all available commands type /help";
