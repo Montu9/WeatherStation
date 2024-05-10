@@ -2,7 +2,7 @@
 #include "secrets.h"
 
 Storage::Storage(WiFiClient& client) {
-  ThingSpeak.begin(client); 
+  ThingSpeak.begin(client);
 }
 
 void Storage::setSensorsData(SensorsData data) {
@@ -17,10 +17,9 @@ void Storage::setSensorsData(SensorsData data) {
 void Storage::saveData() {
   int x = ThingSpeak.writeFields(TS_CHANNEL_NUM, TS_WRITE_API_KEY);
 
-  if(x == 200){
+  if (x == 200) {
     Serial.println("Channel update successful.");
-  }
-  else{
+  } else {
     Serial.println("Problem updating channel. HTTP error code " + String(x));
   }
 }

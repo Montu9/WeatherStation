@@ -9,4 +9,4 @@ struct SensorsData {
   float soilMoisture;
 };
 
-#endif // SENSORSDATA_H
+#endif  // SENSORSDATA_H

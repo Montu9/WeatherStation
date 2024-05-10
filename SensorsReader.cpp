@@ -5,19 +5,18 @@ constexpr static float SOIL_MOISTURE_LOW_THRESHOLD = 30.f;
 constexpr static float SOIL_MOISTURE_OK_THRESHOLD = 60.f;
 constexpr static float SOIL_MOISTURE_HIGH_THRESHOLD = 80.f;
 
-SensorsReader::SensorsReader(AHT_sensor* ahtSensor, BMP_sensor* bmpSensor,
-                           LDR_sensor* ldrSensor, SOIL_sensor* soilSensor)
-    : ahtSensor(ahtSensor), bmpSensor(bmpSensor),
-      ldrSensor(ldrSensor), soilSensor(soilSensor) {}
+SensorsReader::SensorsReader(AHT_sensor* ahtSensor,
+                             BMP_sensor* bmpSensor,
+                             LDR_sensor* ldrSensor,
+                             SOIL_sensor* soilSensor)
+    : ahtSensor(ahtSensor), bmpSensor(bmpSensor), ldrSensor(ldrSensor), soilSensor(soilSensor) {}
 
 SensorsData SensorsReader::readData() const {
-  return {
-    .temperature = bmpSensor->readBMPTemp(),
-    .humidity = ahtSensor->readAHTHumidity(),
-    .pressure = bmpSensor->readBMPPressure(),
-    .brightness = ldrSensor->readLDRLight(),
-    .soilMoisture = soilSensor->readSOILMoist()
-  };
+  return {.temperature = bmpSensor->readBMPTemp(),
+          .humidity = ahtSensor->readAHTHumidity(),
+          .pressure = bmpSensor->readBMPPressure(),
+          .brightness = ldrSensor->readLDRLight(),
+          .soilMoisture = soilSensor->readSOILMoist()};
 }
 
 float SensorsReader::readTemperature() const {
@@ -41,18 +40,14 @@ float SensorsReader::readSoilMoisture() const {
 }
 
 SensorsReader::Rating SensorsReader::calculateSoilMoistureRating(float soilMoisture) const {
-  const std::array<Rating, 5> ratings{Rating::VeryLow, Rating::Low, Rating::Ok,
-                                      Rating::High, Rating::VeryHigh};
+  const std::array<Rating, 5> ratings{Rating::VeryLow, Rating::Low, Rating::Ok, Rating::High,
+                                      Rating::VeryHigh};
 
   const std::array<float, 4> soilMoistureThresholds{
-      SOIL_MOISTURE_VERY_LOW_THRESHOLD,
-      SOIL_MOISTURE_LOW_THRESHOLD,
-      SOIL_MOISTURE_OK_THRESHOLD,
-      SOIL_MOISTURE_HIGH_THRESHOLD
-  };
+    SOIL_MOISTURE_VERY_LOW_THRESHOLD, SOIL_MOISTURE_LOW_THRESHOLD, SOIL_MOISTURE_OK_THRESHOLD,
+    SOIL_MOISTURE_HIGH_THRESHOLD};
 
-  return calculate_rating<float, Rating>(
-      soilMoisture, soilMoistureThresholds, ratings);
+  return calculate_rating<float, Rating>(soilMoisture, soilMoistureThresholds, ratings);
 }
 
 String SensorsReader::toString(SensorsData sensorsData) const {
@@ -91,16 +86,16 @@ String SensorsReader::toString(SensorsData sensorsData) const {
 
 const char* SensorsReader::ratingToString(Rating rating) const {
   switch (rating) {
-  case Rating::VeryLow:
-    return "Very Low";
-  case Rating::Low:
-    return "Low";
-  case Rating::Ok:
-    return "Ok";
-  case Rating::High:
-    return "High";
-  case Rating::VeryHigh:
-  default:
-    return "Very High";
+    case Rating::VeryLow:
+      return "Very Low";
+    case Rating::Low:
+      return "Low";
+    case Rating::Ok:
+      return "Ok";
+    case Rating::High:
+      return "High";
+    case Rating::VeryHigh:
+    default:
+      return "Very High";
   }
 }

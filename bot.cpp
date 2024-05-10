@@ -1,22 +1,22 @@
 #include "bot.h"
 
-Bot::Bot(const String& token, WiFiClientSecure& client, String chatId,
-         SensorsReader* sensorsReader)
+Bot::Bot(const String& token, WiFiClientSecure& client, String chatId, SensorsReader* sensorsReader)
     : bot(token, client), chatId(chatId), sensorsReader(sensorsReader) {
   // Setup Telegram certificate
   client.setCACert(TELEGRAM_CERTIFICATE_ROOT);
 
-  bot.setMyCommands(F("["
-    "{\"command\":\"start\",       \"description\":\"Learn more about bot\"},"
-    "{\"command\":\"subscribe\",   \"description\":\"Start receiving measurement updates\"},"
-    "{\"command\":\"unsubscribe\", \"description\":\"Stop receiving measurement updates\"},"
-    "{\"command\":\"state\",       \"description\":\"Request current sensor measurements\"},"
-    "{\"command\":\"temperature\", \"description\":\"Request current temperature\"},"
-    "{\"command\":\"humidity\",    \"description\":\"Request current humidity\"},"
-    "{\"command\":\"pressure\",    \"description\":\"Request current pressure\"},"
-    "{\"command\":\"brightness\",  \"description\":\"Request current brightness\"},"
-    "{\"command\":\"moisture\",    \"description\":\"Request current soil moisture\"},"
-    "{\"command\":\"help\",        \"description\":\"See available commands\"}]"));
+  bot.setMyCommands(
+    F("["
+      "{\"command\":\"start\",       \"description\":\"Learn more about bot\"},"
+      "{\"command\":\"subscribe\",   \"description\":\"Start receiving measurement updates\"},"
+      "{\"command\":\"unsubscribe\", \"description\":\"Stop receiving measurement updates\"},"
+      "{\"command\":\"state\",       \"description\":\"Request current sensor measurements\"},"
+      "{\"command\":\"temperature\", \"description\":\"Request current temperature\"},"
+      "{\"command\":\"humidity\",    \"description\":\"Request current humidity\"},"
+      "{\"command\":\"pressure\",    \"description\":\"Request current pressure\"},"
+      "{\"command\":\"brightness\",  \"description\":\"Request current brightness\"},"
+      "{\"command\":\"moisture\",    \"description\":\"Request current soil moisture\"},"
+      "{\"command\":\"help\",        \"description\":\"See available commands\"}]"));
 }
 
 void Bot::readMessages() {
@@ -72,7 +72,7 @@ void Bot::handleMessages(int messageCount) {
       output += "Type /help to see available commands\n";
     } else if (text == "/subscribe") {
       alertOn = true;
-      lastTimeBotAlert = millis(); // Reset alert timer
+      lastTimeBotAlert = millis();  // Reset alert timer
       output = "You have subscribed to measurement updates";
     } else if (text == "/unsubscribe") {
       alertOn = false;
@@ -96,8 +96,7 @@ void Bot::handleMessages(int messageCount) {
       output += "%";
     } else if (text == "/moisture") {
       float moisture = sensorsReader->readSoilMoisture();
-      const auto moistureRating =
-          sensorsReader->calculateSoilMoistureRating(moisture);
+      const auto moistureRating = sensorsReader->calculateSoilMoistureRating(moisture);
       const auto moistureRatingStr = sensorsReader->ratingToString(moistureRating);
       output = String(moisture, 2);
       output += "% (";

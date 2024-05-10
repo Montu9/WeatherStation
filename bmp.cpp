@@ -2,9 +2,9 @@
 
 BMP_sensor::BMP_sensor() {
   while (!bmp.begin(0x76)) {
-      Serial.println("Could not find a valid BMP sensor, check wiring!");
-      delay(500);
-    }
+    Serial.println("Could not find a valid BMP sensor, check wiring!");
+    delay(500);
+  }
 
   Serial.println("BMP sensor correctly initialized!");
 }

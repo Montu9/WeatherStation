@@ -2,21 +2,23 @@
 #define SENSORSREADER_H
 
 #include <Arduino.h>
+#include "SensorsData.h"
 #include "aht.h"
 #include "bmp.h"
 #include "ldr.h"
 #include "soil.h"
-#include "SensorsData.h"
 
 #include <array>
 #include <cstddef>
 
 class SensorsReader {
-public:
+ public:
   enum class Rating { VeryLow, Low, Ok, High, VeryHigh };
 
-  SensorsReader(AHT_sensor* ahtSensor, BMP_sensor* bmpSensor,
-                LDR_sensor* ldrSensor, SOIL_sensor* soilSensor);
+  SensorsReader(AHT_sensor* ahtSensor,
+                BMP_sensor* bmpSensor,
+                LDR_sensor* ldrSensor,
+                SOIL_sensor* soilSensor);
 
   SensorsData readData() const;
 
@@ -32,7 +34,7 @@ public:
 
   const char* ratingToString(Rating rating) const;
 
-private:
+ private:
   AHT_sensor* ahtSensor;
   BMP_sensor* bmpSensor;
   LDR_sensor* ldrSensor;
@@ -52,4 +54,4 @@ private:
   }
 };
 
-#endif // SENSORSREADER_H
+#endif  // SENSORSREADER_H

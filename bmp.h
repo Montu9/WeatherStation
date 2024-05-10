@@ -8,15 +8,15 @@ typedef struct {
   float pressure;
 } BMPData;
 
-class BMP_sensor {  
-  public:
-    BMP_sensor();
-    BMPData readBMPData();
-    float readBMPTemp();
-    float readBMPPressure();
+class BMP_sensor {
+ public:
+  BMP_sensor();
+  BMPData readBMPData();
+  float readBMPTemp();
+  float readBMPPressure();
 
-  private:
-    Adafruit_BMP280 bmp;
+ private:
+  Adafruit_BMP280 bmp;
 };
 
 #endif

@@ -22,7 +22,7 @@ AHTData AHT_sensor::readAHTData() {
     printAHTStatus();
   }
 
-  float ahtHumidity= aht21.readHumidity(AHTXX_USE_READ_DATA);
+  float ahtHumidity = aht21.readHumidity(AHTXX_USE_READ_DATA);
 
   Serial.print(F("Humidity...: "));
   if (ahtHumidity != AHTXX_ERROR) {
@@ -51,7 +51,7 @@ float AHT_sensor::readAHTTemp() {
 }
 
 float AHT_sensor::readAHTHumidity() {
-  float ahtHumidity= aht21.readHumidity();
+  float ahtHumidity = aht21.readHumidity();
 
   Serial.print(F("Humidity...: "));
   if (ahtHumidity != AHTXX_ERROR) {
@@ -65,9 +65,7 @@ float AHT_sensor::readAHTHumidity() {
 }
 
 void AHT_sensor::printAHTStatus() {
-
-  switch (aht21.getStatus())
-  {
+  switch (aht21.getStatus()) {
     case AHTXX_NO_ERROR:
       Serial.println(F("no error"));
       break;
@@ -77,20 +75,24 @@ void AHT_sensor::printAHTStatus() {
       break;
 
     case AHTXX_ACK_ERROR:
-      Serial.println(F("sensor didn't return ACK, not connected, broken, long wires (reduce speed), bus locked by slave (increase stretch limit)"));
+      Serial.println(
+        F("sensor didn't return ACK, not connected, broken, long wires (reduce speed), bus locked "
+          "by slave (increase stretch limit)"));
       break;
 
     case AHTXX_DATA_ERROR:
-      Serial.println(F("received data smaller than expected, not connected, broken, long wires (reduce speed), bus locked by slave (increase stretch limit)"));
+      Serial.println(
+        F("received data smaller than expected, not connected, broken, long wires (reduce speed), "
+          "bus locked by slave (increase stretch limit)"));
       break;
 
     case AHTXX_CRC8_ERROR:
-      Serial.println(F("computed CRC8 not match received CRC8, this feature supported only by AHT2x sensors"));
+      Serial.println(
+        F("computed CRC8 not match received CRC8, this feature supported only by AHT2x sensors"));
       break;
 
     default:
-      Serial.println(F("unknown status"));    
+      Serial.println(F("unknown status"));
       break;
   }
-
 }

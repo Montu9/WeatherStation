@@ -1,5 +1,5 @@
-#include <Arduino.h>
 #include "ldr.h"
+#include <Arduino.h>
 
 LDR_sensor::LDR_sensor(int pin_num) {
   ldr_pin = pin_num;

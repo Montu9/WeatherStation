@@ -1,5 +1,5 @@
-#include <Arduino.h>
 #include "soil.h"
+#include <Arduino.h>
 
 SOIL_sensor::SOIL_sensor(int pin_num) {
   soil_pin = pin_num;

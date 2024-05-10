@@ -2,17 +2,16 @@
 #define BOT_H
 
 #include <Arduino.h>
+#include <ArduinoJson.h>
+#include <UniversalTelegramBot.h>
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
-#include <UniversalTelegramBot.h>
-#include <ArduinoJson.h>
-#include "SensorsReader.h"
 #include "SensorsData.h"
+#include "SensorsReader.h"
 
 class Bot {
-public:
-  Bot(const String& token, WiFiClientSecure& client, String chatId,
-      SensorsReader* sensorsReader);
+ public:
+  Bot(const String& token, WiFiClientSecure& client, String chatId, SensorsReader* sensorsReader);
 
   void readMessages();
 
@@ -24,7 +23,7 @@ public:
 
   bool alertOn = false;
 
-private:
+ private:
   UniversalTelegramBot bot;
   String chatId;
   SensorsReader* sensorsReader;
@@ -32,4 +31,4 @@ private:
   void handleMessages(int messageCount);
 };
 
-#endif // BOT_H
+#endif  // BOT_H

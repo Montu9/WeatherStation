@@ -2,17 +2,17 @@
 #define STORAGE_H
 
 #include <WiFi.h>
-#include "ThingSpeak.h"
 #include "SensorsData.h"
+#include "ThingSpeak.h"
 
 class Storage {
-  public:
-    Storage(WiFiClient& client);
-    void setSensorsData(SensorsData data);
-    void saveData();
+ public:
+  Storage(WiFiClient& client);
+  void setSensorsData(SensorsData data);
+  void saveData();
 
-  private:
-    SensorsData sensorsData;
+ private:
+  SensorsData sensorsData;
 };
 
-#endif // STORAGE_H
+#endif  // STORAGE_H
