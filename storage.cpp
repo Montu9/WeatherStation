@@ -3,6 +3,13 @@
 
 Storage::Storage(WiFiClient& client) {
   ThingSpeak.begin(client);
+  sensorsData = {
+    .temperature = 0.0,
+    .humidity = 0.0,
+    .pressure = 0.0,
+    .brightness = 0.0,
+    .soilMoisture = 0.0
+  };
 }
 
 void Storage::setSensorsData(SensorsData data) {
@@ -22,4 +29,8 @@ void Storage::saveData() {
   } else {
     Serial.println("Problem updating channel. HTTP error code " + String(x));
   }
+}
+
+SensorsData Storage::getSensorData() {
+  return sensorsData;
 }

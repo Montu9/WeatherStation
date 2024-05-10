@@ -1,4 +1,6 @@
 #include <WiFi.h>
+#include <AsyncTCP.h>
+#include <ESPAsyncWebServer.h>
 #include <WiFiClientSecure.h>
 #include "SensorsReader.h"
 #include "ThingSpeak.h"
@@ -9,6 +11,7 @@
 #include "secrets.h"
 #include "soil.h"
 #include "storage.h"
+#include "dashboard.h"
 
 // secrets header must define these:
 // WI-FI
@@ -21,6 +24,8 @@
 // #define TS_CHANNEL_NUM (Add your channel e.g. 123UL)
 // #define TS_WRITE_API_KEY "ADD_YOUR_API_KEY"
 
+AsyncWebServer server(80);
+Dashboard* dashboard;
 WiFiClientSecure client;
 WiFiClient tsClient;
 Bot* bot;
@@ -78,6 +83,7 @@ void setup() {
   bot->setLongPoll(BOT_READ_MESSAGES_POLLING_DURATION);
 
   storage = new Storage(tsClient);
+  dashboard = new Dashboard(server, storage);
 }
 
 void loop() {

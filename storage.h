@@ -10,6 +10,7 @@ class Storage {
   Storage(WiFiClient& client);
   void setSensorsData(SensorsData data);
   void saveData();
+  SensorsData getSensorData();
 
  private:
   SensorsData sensorsData;
