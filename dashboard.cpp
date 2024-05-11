@@ -2,7 +2,7 @@
 
 #include <ESPAsyncWebServer.h>
 
-const char index_html[] PROGMEM = R"=="==(
+static const char index_html[] PROGMEM = R"=="==(
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -226,30 +226,34 @@ const char index_html[] PROGMEM = R"=="==(
 </html>
 )=="==";
 
-String Dashboard::processor(const String& var){
+String Dashboard::processor(const String& var) {
   SensorsData values = storage->getSensorData();
-  if(var == "MOISTURE_VAL"){
-    return String(values.soilMoisture);
-  } else if(var == "BRIGHTNESS_VAL"){
+  if (var == "MOISTURE_VAL") {
+    String output(values.soilMoisture.value);
+    output += "(";
+    output += ratingToString(values.soilMoisture.rating);
+    output += ")";
+    return output;
+  } else if (var == "BRIGHTNESS_VAL") {
     return String(values.brightness);
-  } else if(var == "HUMIDITY_VAL"){
+  } else if (var == "HUMIDITY_VAL") {
     return String(values.humidity);
-  } else if(var == "TEMPERATURE_VAL"){
+  } else if (var == "TEMPERATURE_VAL") {
     return String(values.temperature);
-  } else if(var == "PRESSURE_VAL"){
+  } else if (var == "PRESSURE_VAL") {
     return String(values.pressure);
   }
-  
-  return String();
+
+  return String("");
 }
 
-Dashboard::Dashboard(AsyncWebServer& server, Storage* storage) : webServer(server), storage(storage) {
-  webServer.on("/", HTTP_GET, [this](AsyncWebServerRequest *request){
-    request->send_P(200, "text/html", index_html, [this](const String& var) { return this->processor(var); });
+Dashboard::Dashboard(AsyncWebServer& server, Storage* storage)
+    : webServer(server), storage(storage) {
+  webServer.on("/", HTTP_GET, [this](AsyncWebServerRequest* request) {
+    request->send_P(200, "text/html", index_html,
+                    [this](const String& var) { return this->processor(var); });
   });
 
   // Start server
   webServer.begin();
 }
-
-

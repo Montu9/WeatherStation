@@ -3,13 +3,11 @@
 
 Storage::Storage(WiFiClient& client) {
   ThingSpeak.begin(client);
-  sensorsData = {
-    .temperature = 0.0,
-    .humidity = 0.0,
-    .pressure = 0.0,
-    .brightness = 0.0,
-    .soilMoisture = 0.0
-  };
+  sensorsData = {.temperature = 0.0,
+                 .humidity = 0.0,
+                 .pressure = 0.0,
+                 .brightness = 0.0,
+                 .soilMoisture = {.value = 0.0, .rating = Rating::VeryLow}};
 }
 
 void Storage::setSensorsData(SensorsData data) {
@@ -18,7 +16,7 @@ void Storage::setSensorsData(SensorsData data) {
   ThingSpeak.setField(2, sensorsData.humidity);
   ThingSpeak.setField(3, sensorsData.pressure);
   ThingSpeak.setField(4, sensorsData.brightness);
-  ThingSpeak.setField(5, sensorsData.soilMoisture);
+  ThingSpeak.setField(5, sensorsData.soilMoisture.value);
 }
 
 void Storage::saveData() {

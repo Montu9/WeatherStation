@@ -1,17 +1,17 @@
-#include <WiFi.h>
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
+#include <WiFi.h>
 #include <WiFiClientSecure.h>
 #include "SensorsReader.h"
 #include "ThingSpeak.h"
 #include "aht.h"
 #include "bmp.h"
 #include "bot.h"
+#include "dashboard.h"
 #include "ldr.h"
 #include "secrets.h"
 #include "soil.h"
 #include "storage.h"
-#include "dashboard.h"
 
 // secrets header must define these:
 // WI-FI
@@ -94,15 +94,14 @@ void loop() {
 
   if (millis() > bot->lastTimeBotAlert + BOT_ALERT_DELAY) {
     const auto data = sensorsReader->readData();
-    const auto moistureRating = sensorsReader->calculateSoilMoistureRating(data.soilMoisture);
-    const bool soilMoistureIsNotOk = moistureRating != SensorsReader::Rating::Ok;
 
-    if (bot->alertOn || soilMoistureIsNotOk) {
+    if (bot->alertOn || sensorsReader->isSoilMoistureLevelCritical(data.soilMoisture)) {
       bot->writeAlert(data);
     }
-    bot->lastTimeBotAlert = millis();
 
     storage->setSensorsData(data);
     storage->saveData();
+
+    bot->lastTimeBotAlert = millis();
   }
 }

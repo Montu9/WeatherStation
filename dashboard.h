@@ -5,9 +5,9 @@
 #include "storage.h"
 
 class Dashboard {
-  private:
-    AsyncWebServer& webServer;
-    Storage* storage;
+ private:
+  AsyncWebServer& webServer;
+  Storage* storage;
 
  public:
   Dashboard(AsyncWebServer& server, Storage* storage);

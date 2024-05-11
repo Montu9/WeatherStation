@@ -38,8 +38,15 @@ void Bot::readMessages() {
 
 void Bot::writeAlert(SensorsData sensorsData) {
   String message = sensorsReader->toString(sensorsData);
-  message += "\nYou are receiving this message because you have subscribed to this topic.\n";
-  message += "To unsubscribe type /unsubscribe\nTo see all available commands type /help";
+  message += "\n";
+
+  if (alertOn) {
+    message += "You are receiving this message, because you have subscribed to this topic.\n";
+    message += "To unsubscribe type /unsubscribe\nTo see all available commands type /help";
+  } else if (sensorsReader->isSoilMoistureLevelCritical(sensorsData.soilMoisture)) {
+    message += "You are receiving this message, because soil moisture is at critical level.\n";
+  }
+
   Serial.printf("Bot :: Writing alert: %s\n", message.c_str());
   bot.sendMessage(chatId, message, "");
 }
@@ -71,9 +78,12 @@ void Bot::handleMessages(int messageCount) {
       output += "What would you like to know?\n";
       output += "Type /help to see available commands\n";
     } else if (text == "/subscribe") {
+      output = alertOn ? "You are already subscribing to measurement updates"
+                       : "You have subscribed to measurement updates";
+      if (!alertOn) {
+        lastTimeBotAlert = millis();  // Reset alert timer
+      }
       alertOn = true;
-      lastTimeBotAlert = millis();  // Reset alert timer
-      output = "You have subscribed to measurement updates";
     } else if (text == "/unsubscribe") {
       alertOn = false;
       output = "You have unsubscribed to measurement updates";
@@ -95,12 +105,10 @@ void Bot::handleMessages(int messageCount) {
       output = String(brightness, 2);
       output += "%";
     } else if (text == "/moisture") {
-      float moisture = sensorsReader->readSoilMoisture();
-      const auto moistureRating = sensorsReader->calculateSoilMoistureRating(moisture);
-      const auto moistureRatingStr = sensorsReader->ratingToString(moistureRating);
-      output = String(moisture, 2);
+      const auto moisture = sensorsReader->readSoilMoisture();
+      output = String(moisture.value, 2);
       output += "% (";
-      output += moistureRatingStr;
+      output += ratingToString(moisture.rating);
       output += ")";
     } else if (text == "/help") {
       output = "Welcome, " + from + ".\n";
