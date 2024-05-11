@@ -1,5 +1,10 @@
 #include "bot.h"
 
+constexpr static const char* SHOW_MEASUREMENTS_REPLY = R"--(Show measurements \uD83D\uDCDD)--";
+constexpr static const char* SHOW_SOIL_MOISTURE_REPLY = R"--(Show soil moisture \uD83D\uDCA7)--";
+constexpr static const char* SUBSCRIBE_REPLY = R"--(Subscribe \uD83D\uDD14)--";
+constexpr static const char* UNSUBSCRIBE_REPLY = R"--(Unsubscribe \uD83D\uDD15)--";
+
 Bot::Bot(const String& token, WiFiClientSecure& client, String chatId, SensorsReader* sensorsReader)
     : bot(token, client), chatId(chatId), sensorsReader(sensorsReader) {
   // Setup Telegram certificate
@@ -70,6 +75,19 @@ void Bot::handleMessages(int messageCount) {
     String text = bot.messages[i].text;
     Serial.printf("Bot :: Command: %s from: %s\n", text.c_str(), from.c_str());
 
+    const auto mapReplyKeyboardToCommand = [&] {
+      if (text == SHOW_MEASUREMENTS_REPLY) {
+        text = "/state";
+      } else if (text == SHOW_SOIL_MOISTURE_REPLY) {
+        text = "/moisture";
+      } else if (text == SUBSCRIBE_REPLY) {
+        text = "/subscribe";
+      } else if (text == UNSUBSCRIBE_REPLY) {
+        text = "/unsubscribe";
+      }
+    };
+    mapReplyKeyboardToCommand();
+
     String output = "";
 
     if (text == "/start") {
@@ -80,12 +98,18 @@ void Bot::handleMessages(int messageCount) {
     } else if (text == "/subscribe") {
       output = alertOn ? "You are already subscribing to measurement updates"
                        : "You have subscribed to measurement updates";
+      // State changed
       if (!alertOn) {
         lastTimeBotAlert = millis();  // Reset alert timer
+        alertOn = true;
+        setReplyKeyboard();
       }
-      alertOn = true;
     } else if (text == "/unsubscribe") {
-      alertOn = false;
+      // State changed
+      if (alertOn) {
+        alertOn = false;
+        setReplyKeyboard();
+      }
       output = "You have unsubscribed to measurement updates";
     } else if (text == "/state") {
       output = sensorsReader->toString(sensorsReader->readData());
@@ -131,4 +155,19 @@ void Bot::handleMessages(int messageCount) {
     Serial.printf("Bot :: Sending to user: %s\n", output.c_str());
     bot.sendMessage(currentChatId, output, "");
   }
+}
+
+void Bot::setReplyKeyboard() {
+  String keyboardJson("[[\"");
+  keyboardJson += SHOW_MEASUREMENTS_REPLY;
+  keyboardJson += "\"], [\"";
+  keyboardJson += SHOW_SOIL_MOISTURE_REPLY;
+  keyboardJson += "\"], [\"";
+  keyboardJson += alertOn ? "Subscribe" : "Unsubscribe";
+  keyboardJson += "\"]]";
+  const bool resize = true;
+  const bool oneTime = false;
+  const bool selective = false;
+  bot.sendMessageWithReplyKeyboard(chatId, "Choose from one of the following options", "",
+                                   keyboardJson, resize, oneTime, selective);
 }

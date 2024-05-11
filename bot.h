@@ -29,6 +29,8 @@ class Bot {
   SensorsReader* sensorsReader;
 
   void handleMessages(int messageCount);
+
+  void setReplyKeyboard();
 };
 
 #endif  // BOT_H
