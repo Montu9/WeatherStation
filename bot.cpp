@@ -1,9 +1,9 @@
 #include "bot.h"
 
-constexpr static const char* SHOW_MEASUREMENTS_REPLY = R"--(Show measurements \uD83D\uDCDD)--";
-constexpr static const char* SHOW_SOIL_MOISTURE_REPLY = R"--(Show soil moisture \uD83D\uDCA7)--";
-constexpr static const char* SUBSCRIBE_REPLY = R"--(Subscribe \uD83D\uDD14)--";
-constexpr static const char* UNSUBSCRIBE_REPLY = R"--(Unsubscribe \uD83D\uDD15)--";
+constexpr static const char* SHOW_MEASUREMENTS_REPLY = "Show measurements";
+constexpr static const char* SHOW_SOIL_MOISTURE_REPLY = "Show soil moisture";
+constexpr static const char* SUBSCRIBE_REPLY = "Subscribe";
+constexpr static const char* UNSUBSCRIBE_REPLY = "Unsubscribe";
 
 Bot::Bot(const String& token, WiFiClientSecure& client, String chatId, SensorsReader* sensorsReader)
     : bot(token, client), chatId(chatId), sensorsReader(sensorsReader) {
@@ -24,13 +24,6 @@ Bot::Bot(const String& token, WiFiClientSecure& client, String chatId, SensorsRe
       "{\"command\":\"help\",        \"description\":\"See available commands\"}]"));
 
   setReplyKeyboard();
-
-  String output("Bot initialized\n");
-  output += sensorsReader->toString(sensorsReader->readData());
-  output += "\nYou are currently ";
-  output += alertOn_ ? "subscribed" : "unsubscribed";
-  Serial.printf("Bot ctor :: Sending to user: %s\n", output.c_str());
-  bot.sendMessage(chatId, output, "");
 }
 
 void Bot::readMessages() {
@@ -106,7 +99,7 @@ void Bot::handleMessages(int messageCount) {
       output += "Type /help to see available commands\n";
     } else if (text == "/subscribe") {
       output = alertOn_ ? "You are already subscribing to measurement updates"
-                       : "You have subscribed to measurement updates";
+                        : "You have subscribed to measurement updates";
       // State changed
       if (!alertOn_) {
         lastTimeBotAlert = millis();  // Reset alert timer
