@@ -16,10 +16,12 @@
         </h2>
 
         <div
-          class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-6 relative bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-lg"
+          class="mt-6 grid grid-cols-1 gap-x-6 sm:gap-y-10 gap-y-4 sm:grid-cols-6 relative sm:bg-white sm:px-6 sm:pt-10 sm:pb-8 sm:shadow-xl sm:ring-1 sm:ring-gray-900/5 sm:rounded-lg"
         >
           <!-- Temperature... -->
-          <div class="group relative sm:col-span-2">
+          <div
+            class="group relative sm:col-span-2 bg-white px-14 sm:p-0 pt-10 pb-8 shadow-xl sm:shadow-none sm:ring-0 ring-1 ring-gray-900/5 rounded-lg"
+          >
             <div class="w-full flex justify-center items-center">
               <div
                 class="w-12 m-5 aspect-h-1 aspect-w-1 overflow-hidden rounded-md lg:aspect-none group-hover:opacity-75"
@@ -42,14 +44,14 @@
                 </h3>
                 <p class="mt-1 text-sm text-gray-500">Air</p>
               </div>
-              <p class="text-xl font-bold text-gray-900">
-              %TEMPERATURE_VAL%
-              C</p>
+              <p class="text-xl font-bold text-gray-900">%TEMPERATURE_VAL% C</p>
             </div>
           </div>
 
           <!-- Humidity... -->
-          <div class="group relative sm:col-span-2">
+          <div
+            class="group relative sm:col-span-2 bg-white px-14 sm:p-0 pt-10 pb-8 shadow-xl sm:shadow-none sm:ring-0 ring-1 ring-gray-900/5 rounded-lg"
+          >
             <div class="w-full flex justify-center items-center">
               <div
                 class="w-12 m-5 aspect-h-1 aspect-w-1 overflow-hidden rounded-md lg:aspect-none group-hover:opacity-75"
@@ -73,14 +75,14 @@
                 </h3>
                 <p class="mt-1 text-sm text-gray-500">Air</p>
               </div>
-              <p class="text-xl font-bold text-gray-900">
-              %HUMIDITY_VAL%
-              %</p>
+              <p class="text-xl font-bold text-gray-900">%HUMIDITY_VAL% <span>&#37;</span></p>
             </div>
           </div>
 
           <!-- Pressure... -->
-          <div class="group relative sm:col-span-2">
+          <div
+            class="group relative sm:col-span-2 bg-white px-14 sm:p-0 pt-10 pb-8 shadow-xl sm:shadow-none sm:ring-0 ring-1 ring-gray-900/5 rounded-lg"
+          >
             <div class="w-full flex justify-center items-center">
               <div
                 class="w-12 m-5 aspect-h-1 aspect-w-1 overflow-hidden rounded-md lg:aspect-none group-hover:opacity-75"
@@ -104,14 +106,14 @@
                 </h3>
                 <p class="mt-1 text-sm text-gray-500">Air</p>
               </div>
-              <p class="text-xl font-bold text-gray-900">
-              %PRESSURE_VAL%
-              hPa</p>
+              <p class="text-xl font-bold text-gray-900">%PRESSURE_VAL% hPa</p>
             </div>
           </div>
 
           <!-- Brightness... -->
-          <div class="group relative sm:col-span-3">
+          <div
+            class="group relative sm:col-span-3 bg-white px-14 sm:p-0 pt-10 pb-8 shadow-xl sm:shadow-none sm:ring-0 ring-1 ring-gray-900/5 rounded-lg"
+          >
             <div class="w-full flex justify-center items-center">
               <div
                 class="w-12 m-5 aspect-h-1 aspect-w-1 overflow-hidden rounded-md lg:aspect-none group-hover:opacity-75"
@@ -137,15 +139,18 @@
               </div>
               <p class="text-xl font-bold text-gray-900">
               %BRIGHTNESS_VAL%
-              <span>&#37;</span></p>
+                <span>&#37;</span>
+              </p>
             </div>
           </div>
 
           <!-- Moisture... -->
-          <div class="group relative sm:col-span-3">
+          <div
+            class="group relative sm:col-span-3 bg-white px-14 sm:p-0 pt-10 pb-8 shadow-xl sm:shadow-none sm:ring-0 ring-1 ring-gray-900/5 rounded-lg"
+          >
             <div class="w-full flex justify-center items-center">
               <div
-                class="w-12 m-5 aspect-h-1 aspect-w-1 overflow-hidden rounded-md lg:aspect-none group-hover:opacity-75"
+                class="w-10 m-5 aspect-h-1 aspect-w-1 overflow-hidden rounded-md lg:aspect-none group-hover:opacity-75"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
                   <path
@@ -166,53 +171,59 @@
                 <p class="mt-1 text-sm text-gray-500">Soil</p>
               </div>
               <p class="text-xl font-bold text-gray-900">
-              %MOISTURE_VAL%
-              <span>&#37;</span></p>
+                %MOISTURE_VAL%
+                <span>&#37;</span>
+              </p>
             </div>
           </div>
         </div>
         <div
-          class="space-x-10 snap overflow-x-auto mt-6 flex relative bg-white px-10 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 rounded-lg"
+          class="pt-10 mt-6 bg-white shadow-xl ring-1 ring-gray-900/5 rounded-lg"
         >
-          <div class="snap-center">
-            <iframe
-              width="450"
-              height="260"
-              style="border: 1px solid #cccccc"
-              src="https://thingspeak.com/channels/2543536/charts/1?bgcolor=%%23ffffff&color=%%23d62020&dynamic=true&results=60&title=Temperature&type=line&yaxis=%%5BC%%5D+Temp"
-            ></iframe>
-          </div>
-          <div class="snap-center">
-            <iframe
-              width="450"
-              height="260"
-              style="border: 1px solid #cccccc"
-              src="https://thingspeak.com/channels/2543536/charts/2?bgcolor=%%23ffffff&color=%%23d62020&dynamic=true&results=60&title=Humidity&type=line&yaxis=%%5B%%25%%5D+Humidity"
-            ></iframe>
-          </div>
-          <div class="snap-center">
-            <iframe
-              width="450"
-              height="260"
-              style="border: 1px solid #cccccc"
-              src="https://thingspeak.com/channels/2543536/charts/3?bgcolor=%%23ffffff&color=%%23d62020&dynamic=true&results=60&title=Pressure&type=line&yaxis=%%5BhPa%%5D+Pressure"
-            ></iframe>
-          </div>
-          <div class="snap-center">
-            <iframe
-              width="450"
-              height="260"
-              style="border: 1px solid #cccccc"
-              src="https://thingspeak.com/channels/2543536/charts/4?bgcolor=%%23ffffff&color=%%23d62020&dynamic=true&results=60&title=Brightness&type=line&yaxis=%%5B%%25%%5D+Brightness"
-            ></iframe>
-          </div>
-          <div class="snap-center">
-            <iframe
-              width="450"
-              height="260"
-              style="border: 1px solid #cccccc"
-              src="https://thingspeak.com/channels/2543536/charts/5?bgcolor=%%23ffffff&color=%%23d62020&dynamic=true&results=60&title=Moisture&type=line&yaxis=%%5B%%25%%5D+Moisture"
-            ></iframe>
+          <h2 class="text-3xl font-bold px-10">Data charts</h2>
+          <div
+            class="flex snap space-x-10 overflow-x-auto relative px-10 py-12"
+          >
+            <div class="snap-center">
+              <iframe
+                width="450"
+                height="260"
+                style="border: 1px solid #cccccc"
+                src="https://thingspeak.com/channels/2543536/charts/1?bgcolor=%%23ffffff&color=%%23d62020&dynamic=true&results=60&title=Temperature&type=line&yaxis=%%5BC%%5D+Temp"
+              ></iframe>
+            </div>
+            <div class="snap-center">
+              <iframe
+                width="450"
+                height="260"
+                style="border: 1px solid #cccccc"
+                src="https://thingspeak.com/channels/2543536/charts/2?bgcolor=%%23ffffff&color=%%23d62020&dynamic=true&results=60&title=Humidity&type=line&yaxis=%%5B%%25%%5D+Humidity"
+              ></iframe>
+            </div>
+            <div class="snap-center">
+              <iframe
+                width="450"
+                height="260"
+                style="border: 1px solid #cccccc"
+                src="https://thingspeak.com/channels/2543536/charts/3?bgcolor=%%23ffffff&color=%%23d62020&dynamic=true&results=60&title=Pressure&type=line&yaxis=%%5BhPa%%5D+Pressure"
+              ></iframe>
+            </div>
+            <div class="snap-center">
+              <iframe
+                width="450"
+                height="260"
+                style="border: 1px solid #cccccc"
+                src="https://thingspeak.com/channels/2543536/charts/4?bgcolor=%%23ffffff&color=%%23d62020&dynamic=true&results=60&title=Brightness&type=line&yaxis=%%5B%%25%%5D+Brightness"
+              ></iframe>
+            </div>
+            <div class="snap-center">
+              <iframe
+                width="450"
+                height="260"
+                style="border: 1px solid #cccccc"
+                src="https://thingspeak.com/channels/2543536/charts/5?bgcolor=%%23ffffff&color=%%23d62020&dynamic=true&results=60&title=Moisture&type=line&yaxis=%%5B%%25%%5D+Moisture"
+              ></iframe>
+            </div>
           </div>
         </div>
       </div>
