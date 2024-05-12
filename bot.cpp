@@ -77,18 +77,15 @@ void Bot::handleMessages(int messageCount) {
     String text = bot.messages[i].text;
     Serial.printf("Bot :: Command: %s from: %s\n", text.c_str(), from.c_str());
 
-    const auto mapReplyKeyboardToCommand = [&] {
-      if (text == SHOW_MEASUREMENTS_REPLY) {
-        text = "/state";
-      } else if (text == SHOW_SOIL_MOISTURE_REPLY) {
-        text = "/moisture";
-      } else if (text == SUBSCRIBE_REPLY) {
-        text = "/subscribe";
-      } else if (text == UNSUBSCRIBE_REPLY) {
-        text = "/unsubscribe";
-      }
-    };
-    mapReplyKeyboardToCommand();
+    if (text == SHOW_MEASUREMENTS_REPLY) {
+      text = "/state";
+    } else if (text == SHOW_SOIL_MOISTURE_REPLY) {
+      text = "/moisture";
+    } else if (text == SUBSCRIBE_REPLY) {
+      text = "/subscribe";
+    } else if (text == UNSUBSCRIBE_REPLY) {
+      text = "/unsubscribe";
+    }
 
     String output = "";
 
