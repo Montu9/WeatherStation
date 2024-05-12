@@ -5,10 +5,10 @@
 String Dashboard::processor(const String& var) {
   SensorsData values = storage->getSensorData();
   if (var == "MOISTURE_VAL") {
-    String output(values.soilMoisture.value);
-    output += "(";
+    String output("(");
     output += ratingToString(values.soilMoisture.rating);
-    output += ")";
+    output += ") ";
+    output += values.soilMoisture.value;
     return output;
   } else if (var == "BRIGHTNESS_VAL") {
     return String(values.brightness);
@@ -17,7 +17,7 @@ String Dashboard::processor(const String& var) {
   } else if (var == "TEMPERATURE_VAL") {
     return String(values.temperature);
   } else if (var == "PRESSURE_VAL") {
-    return String(values.pressure);
+    return String((int) values.pressure);
   }
 
   return String();
