@@ -22,6 +22,15 @@ Bot::Bot(const String& token, WiFiClientSecure& client, String chatId, SensorsRe
       "{\"command\":\"brightness\",  \"description\":\"Request current brightness\"},"
       "{\"command\":\"moisture\",    \"description\":\"Request current soil moisture\"},"
       "{\"command\":\"help\",        \"description\":\"See available commands\"}]"));
+
+  setReplyKeyboard();
+
+  String output("Bot initialized\n");
+  output += sensorsReader->toString(sensorsReader->readData());
+  output += "\nYou are currently ";
+  output += alertOn_ ? "subscribed" : "unsubscribed";
+  Serial.printf("Bot ctor :: Sending to user: %s\n", output.c_str());
+  bot.sendMessage(chatId, output, "");
 }
 
 void Bot::readMessages() {
@@ -45,7 +54,7 @@ void Bot::writeAlert(SensorsData sensorsData) {
   String message = sensorsReader->toString(sensorsData);
   message += "\n";
 
-  if (alertOn) {
+  if (alertOn_) {
     message += "You are receiving this message, because you have subscribed to this topic.\n";
     message += "To unsubscribe type /unsubscribe\nTo see all available commands type /help";
   } else if (sensorsReader->isSoilMoistureLevelCritical(sensorsData.soilMoisture)) {
@@ -96,25 +105,25 @@ void Bot::handleMessages(int messageCount) {
       output += "What would you like to know?\n";
       output += "Type /help to see available commands\n";
     } else if (text == "/subscribe") {
-      output = alertOn ? "You are already subscribing to measurement updates"
+      output = alertOn_ ? "You are already subscribing to measurement updates"
                        : "You have subscribed to measurement updates";
       // State changed
-      if (!alertOn) {
+      if (!alertOn_) {
         lastTimeBotAlert = millis();  // Reset alert timer
-        alertOn = true;
+        alertOn_ = true;
         setReplyKeyboard();
       }
     } else if (text == "/unsubscribe") {
       // State changed
-      if (alertOn) {
-        alertOn = false;
+      if (alertOn_) {
+        alertOn_ = false;
         setReplyKeyboard();
       }
       output = "You have unsubscribed to measurement updates";
     } else if (text == "/state") {
       output = sensorsReader->toString(sensorsReader->readData());
       output += "\nYou are currently ";
-      output += alertOn ? "subscribed" : "unsubscribed";
+      output += alertOn_ ? "subscribed" : "unsubscribed";
     } else if (text == "/temperature") {
       float temp = sensorsReader->readTemperature();
       output = String(temp, 2);
@@ -163,7 +172,7 @@ void Bot::setReplyKeyboard() {
   keyboardJson += "\"], [\"";
   keyboardJson += SHOW_SOIL_MOISTURE_REPLY;
   keyboardJson += "\"], [\"";
-  keyboardJson += alertOn ? "Subscribe" : "Unsubscribe";
+  keyboardJson += alertOn_ ? "Subscribe" : "Unsubscribe";
   keyboardJson += "\"]]";
   const bool resize = true;
   const bool oneTime = false;

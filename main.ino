@@ -95,7 +95,7 @@ void loop() {
   if (millis() > bot->lastTimeBotAlert + BOT_ALERT_DELAY) {
     const auto data = sensorsReader->readData();
 
-    if (bot->alertOn || sensorsReader->isSoilMoistureLevelCritical(data.soilMoisture)) {
+    if (bot->alertOn() || sensorsReader->isSoilMoistureLevelCritical(data.soilMoisture)) {
       bot->writeAlert(data);
     }
 

@@ -21,12 +21,14 @@ class Bot {
 
   unsigned long lastTimeBotAlert = 0;
 
-  bool alertOn = false;
+  bool alertOn() const { return alertOn_; }
 
  private:
   UniversalTelegramBot bot;
   String chatId;
   SensorsReader* sensorsReader;
+
+  bool alertOn_ = true;
 
   void handleMessages(int messageCount);
 
