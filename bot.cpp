@@ -162,7 +162,7 @@ void Bot::setReplyKeyboard() {
   keyboardJson += "\"], [\"";
   keyboardJson += SHOW_SOIL_MOISTURE_REPLY;
   keyboardJson += "\"], [\"";
-  keyboardJson += alertOn_ ? "Subscribe" : "Unsubscribe";
+  keyboardJson += alertOn_ ? "Unsubscribe" : "Subscribe";
   keyboardJson += "\"]]";
   const bool resize = true;
   const bool oneTime = false;
