@@ -65,6 +65,21 @@ void setupWifi() {
   Serial.println(WiFi.localIP());
 }
 
+void handleReadMessages() {
+  bot->readMessages();
+}
+
+void handleBotAlert() {
+  const auto data = sensorsReader->readData();
+
+  if (bot->alertOn() || sensorsReader->isSoilMoistureLevelCritical(data.soilMoisture)) {
+    bot->writeAlert(data);
+  }
+
+  storage->setSensorsData(data);
+  storage->saveData();
+}
+
 void setup() {
   Serial.begin(115200);
   delay(1000);
@@ -84,24 +99,18 @@ void setup() {
 
   storage = new Storage(tsClient);
   dashboard = new Dashboard(server, storage);
+
+  handleBotAlert();
 }
 
 void loop() {
   if (millis() > lastTimeBotReadMessages + BOT_READ_MESSAGES_DELAY) {
-    bot->readMessages();
+    handleReadMessages();
     lastTimeBotReadMessages = millis();
   }
 
   if (millis() > bot->lastTimeBotAlert + BOT_ALERT_DELAY) {
-    const auto data = sensorsReader->readData();
-
-    if (bot->alertOn() || sensorsReader->isSoilMoistureLevelCritical(data.soilMoisture)) {
-      bot->writeAlert(data);
-    }
-
-    storage->setSensorsData(data);
-    storage->saveData();
-
+    handleBotAlert();
     bot->lastTimeBotAlert = millis();
   }
 }
