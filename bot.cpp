@@ -117,12 +117,15 @@ void Bot::handleMessages(int messageCount) {
     } else if (text == "/temperature") {
       float temp = sensorsReader->readTemperature();
       output = String(temp, 2);
+      output += "℃";
     } else if (text == "/humidity") {
       float humidity = sensorsReader->readHumidity();
       output = String(humidity, 2);
+      output += "%";
     } else if (text == "/pressure") {
       float pressure = sensorsReader->readPressure();
       output = String(pressure, 2);
+      output += "hPa";
     } else if (text == "/brightness") {
       float brightness = sensorsReader->readBrightness();
       output = String(brightness, 2);
