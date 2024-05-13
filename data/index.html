@@ -44,7 +44,7 @@
                 </h3>
                 <p class="mt-1 text-sm text-gray-500">Air</p>
               </div>
-              <p class="text-xl font-bold text-gray-900">%TEMPERATURE_VAL% C</p>
+              <p id="temperature" class="text-xl font-bold text-gray-900">%TEMPERATURE_VAL% C</p>
             </div>
           </div>
 
@@ -75,7 +75,7 @@
                 </h3>
                 <p class="mt-1 text-sm text-gray-500">Air</p>
               </div>
-              <p class="text-xl font-bold text-gray-900">%HUMIDITY_VAL% <span>&#37;</span></p>
+              <p id="humidity" class="text-xl font-bold text-gray-900">%HUMIDITY_VAL% <span>&#37;</span></p>
             </div>
           </div>
 
@@ -106,7 +106,7 @@
                 </h3>
                 <p class="mt-1 text-sm text-gray-500">Air</p>
               </div>
-              <p class="text-xl font-bold text-gray-900">%PRESSURE_VAL% hPa</p>
+              <p id="pressure" class="text-xl font-bold text-gray-900">%PRESSURE_VAL% hPa</p>
             </div>
           </div>
 
@@ -137,7 +137,7 @@
                 </h3>
                 <p class="mt-1 text-sm text-gray-500">Air</p>
               </div>
-              <p class="text-xl font-bold text-gray-900">
+              <p id="brightness" class="text-xl font-bold text-gray-900">
               %BRIGHTNESS_VAL%
                 <span>&#37;</span>
               </p>
@@ -170,7 +170,7 @@
                 </h3>
                 <p class="mt-1 text-sm text-gray-500">Soil</p>
               </div>
-              <p class="text-xl font-bold text-gray-900">
+              <p id="moisture" class="text-xl font-bold text-gray-900">
                 %MOISTURE_VAL%
                 <span>&#37;</span>
               </p>
@@ -228,5 +228,25 @@
         </div>
       </div>
     </div>
+
+    <script>
+      function changeContent() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            const data = JSON.parse(this.responseText);
+            document.getElementById("brightness").innerHTML = data?.brightness + " %%";
+            document.getElementById("moisture").innerHTML = data?.soilMoisture + " %%";
+            document.getElementById("pressure").innerHTML = data?.pressure + " hPa";
+            document.getElementById("temperature").innerHTML = data?.temperature + " C";
+            document.getElementById("humidity").innerHTML = data?.humidity + " %%";
+          }
+        };
+        xhttp.open("GET", "update", true);
+        xhttp.send();
+      }
+
+      setInterval(changeContent, 1000 * 60 * 1);
+    </script>
   </body>
 </html>

@@ -10,8 +10,9 @@ class Dashboard {
   Storage* storage;
 
  public:
-  Dashboard(AsyncWebServer& server, Storage* storage);
+  Dashboard(AsyncWebServer& server, Storage* storageTemp);
   String processor(const String& var);
+  Storage* getStorage();
 };
 
 #endif  // DASHBOARD_H
