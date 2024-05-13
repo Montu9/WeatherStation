@@ -1,7 +1,7 @@
 #include <ESPAsyncWebServer.h>
 #include <WiFi.h>
-#include "AsyncJson.h"
 #include "ArduinoJson.h"
+#include "AsyncJson.h"
 #include "LittleFS.h"
 #include "dashboard.h"
 
@@ -32,7 +32,7 @@ Storage* Dashboard::getStorage() {
 
 Dashboard::Dashboard(AsyncWebServer& server, Storage* storageTemp)
     : webServer(server), storage(storageTemp) {
-    if (!LittleFS.begin()) {
+  if (!LittleFS.begin()) {
     Serial.println("An Error has occurred while mounting LittleFS");
     return;
   }

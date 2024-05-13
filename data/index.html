@@ -44,7 +44,7 @@
                 </h3>
                 <p class="mt-1 text-sm text-gray-500">Air</p>
               </div>
-              <p id="temperature" class="text-xl font-bold text-gray-900">%TEMPERATURE_VAL% C</p>
+              <p id="temperature" class="text-xl font-bold text-gray-900">%TEMPERATURE_VAL% ℃</p>
             </div>
           </div>
 
@@ -238,7 +238,7 @@
             document.getElementById("brightness").innerHTML = data?.brightness + " %%";
             document.getElementById("moisture").innerHTML = data?.soilMoisture + " %%";
             document.getElementById("pressure").innerHTML = data?.pressure + " hPa";
-            document.getElementById("temperature").innerHTML = data?.temperature + " C";
+            document.getElementById("temperature").innerHTML = data?.temperature + " ℃";
             document.getElementById("humidity").innerHTML = data?.humidity + " %%";
           }
         };
