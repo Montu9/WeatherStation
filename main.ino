@@ -30,10 +30,10 @@ WiFiClientSecure client;
 WiFiClient tsClient;
 Bot* bot;
 
-AHT_sensor* aht;
-BMP_sensor* bmp;
-LDR_sensor* ldr;
-SOIL_sensor* soil;
+AHT_sensor* aht;    // GPIO-22 (I2C_SCL) oraz GPIO-21 (I2C_SDA)
+BMP_sensor* bmp;    // GPIO-22 (I2C_SCL) oraz GPIO-21 (I2C_SDA)
+LDR_sensor* ldr;    // GPIO-36 (ADC1_0)
+SOIL_sensor* soil;  // GPIO-39 (ADC1_3)
 SensorsReader* sensorsReader;
 Storage* storage;
 
@@ -88,8 +88,8 @@ void setup() {
   // Setup sensors
   aht = new AHT_sensor();
   bmp = new BMP_sensor();
-  ldr = new LDR_sensor(39);
-  soil = new SOIL_sensor(36);
+  ldr = new LDR_sensor(36);
+  soil = new SOIL_sensor(39);
   sensorsReader = new SensorsReader(aht, bmp, ldr, soil);
 
   setupWifi();
